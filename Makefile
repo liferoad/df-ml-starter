@@ -26,13 +26,14 @@ help: ## Print this help
 	@echo
 	@echo "  make targets:"
 	@echo
-	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
+	@$(PYTHON) -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
 init-venv: ## Create virtual environment in venv folder
 	@$(PYTHON) -m venv venv
 
 init: init-venv ## Init virtual environment
 	@./venv/bin/python3 -m pip install -U pip
+	@$(shell sed "s|\$${BEAM_VERSION}|$(BEAM_VERSION)|g" requirements_prod.txt > requirements.txt)
 	@./venv/bin/python3 -m pip install -r requirements.txt
 	@./venv/bin/python3 -m pip install -r requirements.dev.txt
 	@./venv/bin/python3 -m pre_commit install --install-hooks --overwrite
@@ -88,6 +89,25 @@ run-df: docker ## Run a Dataflow job using the custom container with GPUs
 	--dataflow_service_option $(SERVICE_OPTIONS) \
 	--sdk_container_image $(CUSTOM_CONTAINER_IMAGE) \
 	--sdk_location container \
+	--input $(INPUT_DATA) \
+	--output $(OUTPUT_DATA) \
+	--model_state_dict_path  $(MODEL_STATE_DICT_PATH) \
+	--model_name $(MODEL_NAME)
+
+run-df-cpu: ## Run a Dataflow job with CPUs
+	@$(shell sed "s|\$${BEAM_VERSION}|$(BEAM_VERSION)|g" requirements.txt > beam-output/requirements.txt)
+	@$(eval JOB_NAME := beam-ml-starter-cpu-$(shell date +%s)-$(shell echo $$$$))
+	@time ./venv/bin/python3 -m src.run \
+	--runner DataflowRunner \
+	--job_name $(JOB_NAME) \
+	--project $(PROJECT_ID) \
+	--region $(REGION) \
+	--machine_type $(MACHINE_TYPE) \
+	--disk_size_gb $(DISK_SIZE_GB) \
+	--staging_location $(STAGING_LOCATION) \
+	--temp_location $(TEMP_LOCATION) \
+	--requirements_file requirements.txt \
+	--setup_file ./setup.py \
 	--input $(INPUT_DATA) \
 	--output $(OUTPUT_DATA) \
 	--model_state_dict_path  $(MODEL_STATE_DICT_PATH) \

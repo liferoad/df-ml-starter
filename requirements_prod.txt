@@ -1,4 +1,4 @@
-apache-beam[gcp]==2.46.0
+apache-beam[gcp]==${BEAM_VERSION}
 pydantic
 torch>=1.7.1
 torchvision>=0.8.2

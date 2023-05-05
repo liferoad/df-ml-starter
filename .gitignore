@@ -1,6 +1,7 @@
 # beam temp
 beam-temp-*
 beam-output/
+requirements.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

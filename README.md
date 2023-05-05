@@ -3,22 +3,109 @@
 ## Prerequisites
 
 * conda
+* git
 * make
 * docker
 * gcloud
+* python3-venv
+
+```bash
+sudo apt-get update
+sudo apt-get install -y python3-venv git make
+```
+Install Docker on Debian: https://docs.docker.com/engine/install/debian/
+Without sudo,
+```bash
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
+```
 
 ## Directory structure
 TO-Do
 
 ## User Guide
 
-* copy .env.template to .env and update settings
+**This process is only tested on GCE with Debian.**
+
+### Step 1: Clone this repo and edit .env
+
+```bash
+git clone https://github.com/liferoad/df-ml-starter.git
+cd df-ml-starter
+cp .env.template .env
+```
+Use your editor to fill in the information in the `.env` file.
+
+If you want to try other ML models under `gs://apache-beam-ml/models/`,
+```bash
+gsutil ls gs://apache-beam-ml/models/
+```
+
+It is highly recommended to run through this guide once using `resnet101` for image classification.
+
+All the useful actions can be triggered using `make`:
+```console
+$ make
+
+  make targets:
+
+     clean                     Remove virtual environment, downloaded models, etc
+     clean-lite                Remove pycache files, pytest files, etc
+     docker                    Build a custom docker image and push it to Artifact Registry
+     format                    Run formatter on source code
+     help                      Print this help
+     init                      Init virtual environment
+     init-venv                 Create virtual environment in venv folder
+     lint                      Run linter on source code
+     run-df                    Run a Dataflow job using the custom container with GPUs
+     run-direct                Run a local test with DirectRunner
+     test                      Run tests
+```
+
+### Step 2: Initialize a venv for your project
+```bash
+make init
+source venv/bin/activate
+```
+Note you must make sure the base Python version matches the version defined in `.env`.
+The base python can be configured using `conda`, e.g.,
+```bash
+conda create --name py38 python=3.8
+conda activate py38
+```
+If anything goes wrong, you can rebuild the `venv`,
+```bash
+make clean
+make init
+```
+To check the `venv` is created correctly,
+```bash
+make test
+```
+
+### Step 3: Test the Beam pipeline using DirectRunner
+`DirectRunner` provides the local way to validate whether your Beam pipeline works correctly,
+```bash
+make run-direct
+```
+
+### Step 4: Run the Beam pipeline using DataflowRunner
+To speed up the Dataflow worker startup time, custom container can be built by,
+```bash
+make docker
+```
+The final docker image will be pushed to Artifact Registry. For this guide,
+we use `tensor_rt.Dockerfile` to demonstrate how to build the container to run the inference on GPUs with TensorRT.
+
+## Pipeline Details
 
 ## FAQ
 
 ### Permission error when using any GCP command
 ```bash
 gcloud auth login
+gcloud auth application-default login
 # replace it with the appropriate region
 gcloud auth configure-docker us-docker.pkg.dev
 ```
@@ -45,3 +132,4 @@ Restarting the docker could resolve this issue.
 ## Useful Links
 * https://cloud.google.com/dataflow/docs/guides/using-custom-containers#docker
 * https://cloud.google.com/dataflow/docs/guides/using-gpus#building_a_custom_container_image
+* https://beam.apache.org/documentation/sdks/python-pipeline-dependencies/
