@@ -58,8 +58,12 @@ clean: clean-lite ## Remove virtual environment, downloaded models, etc
 	@rm -rf venv
 	@echo "run 'make init'"
 
+test: lint ## Run tests
+	@PYTHONPATH="./:./src" ./venv/bin/pytest -s -vv --cov-config=.coveragerc --cov-report html:htmlcov_v1 --cov-fail-under=50 tests/
+
 run-direct: ## Run a local test with DirectRunner
 	@time ./venv/bin/python3 -m src.run \
 	--input data/openimage_10.txt \
 	--output beam-output/my_test_out.txt \
-	--model_state_dict_path gs://apache-beam-ml/models/torchvision.models.resnet101.pth
+	--model_state_dict_path gs://apache-beam-ml/models/torchvision.models.resnet101.pth \
+	--model_name resnet101

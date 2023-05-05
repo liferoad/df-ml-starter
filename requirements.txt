@@ -16,6 +16,7 @@
 #
 
 apache-beam[gcp]
+pydantic
 torch>=1.7.1
 torchvision>=0.8.2
 pillow>=8.0.0
