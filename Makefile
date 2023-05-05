@@ -64,6 +64,31 @@ test: lint ## Run tests
 run-direct: ## Run a local test with DirectRunner
 	@time ./venv/bin/python3 -m src.run \
 	--input data/openimage_10.txt \
-	--output beam-output/my_test_out.txt \
-	--model_state_dict_path gs://apache-beam-ml/models/torchvision.models.resnet101.pth \
-	--model_name resnet101
+	--output beam-output/beam_test_out.txt \
+	--model_state_dict_path $(MODEL_STATE_DICT_PATH) \
+	--model_name $(MODEL_NAME)
+
+docker: ## Build a custom docker image and push it to Artifact Registry
+	docker build --build-arg PYTHON_VERSION=$(PYTHON_VERSION) --build-arg BEAM_VERSION=$(BEAM_VERSION) \
+	-t $(CUSTOM_CONTAINER_IMAGE) -f tensor_rt.Dockerfile .
+	docker push $(CUSTOM_CONTAINER_IMAGE)
+
+run-df: docker ## Run a Dataflow job using the custom container with GPUs
+	$(eval JOB_NAME := beam-ml-starter-$(shell date +%s)-$(shell echo $$$$))
+	@time ./venv/bin/python3 -m src.run \
+	--runner DataflowRunner \
+	--job_name $(JOB_NAME) \
+	--project $(PROJECT_ID) \
+	--region $(REGION) \
+	--machine_type $(MACHINE_TYPE) \
+	--disk_size_gb $(DISK_SIZE_GB) \
+	--staging_location $(STAGING_LOCATION) \
+	--temp_location $(TEMP_LOCATION) \
+	--device GPU \
+	--dataflow_service_option $(SERVICE_OPTIONS) \
+	--sdk_container_image $(CUSTOM_CONTAINER_IMAGE) \
+	--sdk_location container \
+	--input $(INPUT_DATA) \
+	--output $(OUTPUT_DATA) \
+	--model_state_dict_path  $(MODEL_STATE_DICT_PATH) \
+	--model_name $(MODEL_NAME)
