@@ -3,6 +3,9 @@ beam-temp-*
 beam-output/
 Dockerfile
 
+# sys
+.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
