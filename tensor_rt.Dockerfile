@@ -1,5 +1,4 @@
 ARG PYTORCH_SERVING_BUILD_IMAGE=nvcr.io/nvidia/pytorch:22.11-py3
-ARG PYTHON_ENV=python${PYTHON_VERSION}-venv
 
 FROM ${PYTORCH_SERVING_BUILD_IMAGE}
 
@@ -10,7 +9,7 @@ WORKDIR /workspace
 COPY requirements.txt requirements.txt
 
 RUN apt-get update \
-    && apt install ${PYTHON_ENV} -y \
+    && apt install python${PYTHON_VERSION} python${PYTHON_VERSION}-venv python3-venv -y \
     && pip install --upgrade pip \
     && DEBIAN_FRONTEND=noninteractive apt-get install ffmpeg libsm6 libxext6 -y --no-install-recommends \
     && pip install cuda-python onnx numpy onnxruntime common \

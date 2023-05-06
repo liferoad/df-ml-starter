@@ -185,6 +185,19 @@ Restarting the docker could resolve this issue.
 docker run --rm -it --entrypoint=/bin/bash $CUSTOM_CONTAINER_IMAGE
 ```
 
+### Errors could happen when the custom container is not built correctly
+
+Check Cloud Logs, pay attention to INFO for Worker logs:
+```
+INFO 2023-05-06T15:13:01.237562007Z The virtual environment was not created successfully because ensurepip is not
+INFO 2023-05-06T15:13:01.237601258Z available. On Debian/Ubuntu systems, you need to install the python3-venv
+INFO 2023-05-06T15:13:01.237607714Z package using the following command.
+```
+or (might be caused by building the container on Mac OS)
+```
+exec /opt/apache/beam/boot: no such file or directory
+```
+
 ## Useful Links
 * https://cloud.google.com/dataflow/docs/guides/using-custom-containers#docker
 * https://cloud.google.com/dataflow/docs/guides/using-gpus#building_a_custom_container_image
