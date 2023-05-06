@@ -122,6 +122,7 @@ make run-df-cpu
 ```
 When using resnet101 to score 50k images, the job took ~30m and cost ~1.4$ with resnet101.
 For `mobilenet_v2`, it cost 0.5$ with ~22m.
+Note the cost and time depends on your job settings and the regions.
 
 Running Dataflow GPU jobs needs to build a custom container,
 ```bash
@@ -129,6 +130,8 @@ make docker
 ```
 The final docker image will be pushed to Artifact Registry. For this guide,
 we use `tensor_rt.Dockerfile` to demonstrate how to build the container to run the inference on GPUs with TensorRT.
+**Note given the base image issue for TensorRT, only Python 3.8 should be used when running GPUs.**
+You can follow [this doc](https://cloud.google.com/dataflow/docs/guides/using-gpus) to create other GPU containers.
 
 This runs a Dataflow job with GPUs,
 ```bash
@@ -177,7 +180,13 @@ failed to solve with frontend dockerfile.v0: failed to create LLB definition: fa
 ```
 Restarting the docker could resolve this issue.
 
+### Check the built container
+```bash
+docker run --rm -it --entrypoint=/bin/bash $CUSTOM_CONTAINER_IMAGE
+```
+
 ## Useful Links
 * https://cloud.google.com/dataflow/docs/guides/using-custom-containers#docker
 * https://cloud.google.com/dataflow/docs/guides/using-gpus#building_a_custom_container_image
 * https://beam.apache.org/documentation/sdks/python-pipeline-dependencies/
+* https://github.com/apache/beam/blob/master/.test-infra/jenkins/job_InferenceBenchmarkTests_Python.groovy
