@@ -14,7 +14,6 @@ WORKDIR /workspace
 ARG BEAM_VERSION
 
 COPY requirements.txt requirements.txt
-RUN sed -i "s|\${BEAM_VERSION}|${BEAM_VERSION}|g" requirements.txt
 
 RUN apt-get update \
     && apt install ${PYTHON_ENV} -y \

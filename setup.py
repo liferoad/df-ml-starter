@@ -13,6 +13,5 @@ setuptools.setup(
     name="src",
     version="0.0.1",
     install_requires=required,
-    include_package_data=True,
-    packages=setuptools.find_packages("src", exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
+    packages=["src"],
 )

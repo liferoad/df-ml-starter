@@ -1,5 +1,9 @@
 # df-ml-starter
 
+## Summary
+This repo contains a simple Beam RunInference project, which demonstrates how to run this Beam pipeline using DirectRunner to develope and test
+and launch the production job using DataflowRunner on either CPUs or GPUs. It can be served as a boilerplate to create a new Dataflow ML project.
+
 ## Prerequisites
 
 * conda
@@ -22,7 +26,27 @@ newgrp docker
 ```
 
 ## Directory structure
-TO-Do
+```
+.
+├── LICENSE
+├── Makefile                <- Makefile with commands and type `make` to get the command list
+├── README.md               <- The top-level README for developers using this project
+├── data                    <- Any data for local development and testing
+│   └── openimage_10.txt    <- A sample test data that contains the gcs file path for each image
+├── pyproject.toml          <- The TOML format Python project configuration file
+├── requirements.dev.txt    <- Packages for the development such as `pytest`
+├── requirements.txt        <- The auto-generated packages for the production environment
+├── requirements.prod.txt   <- Packages for the production environment and produces `requirements.txt`
+├── setup.py                <- Used in `python setup.py sdist` to create the multi-file python package
+├── src                     <- Source code for use in this project
+│   ├── __init__.py         <- Makes src a Python module
+│   ├── config.py           <- `pydantic` model classes to define sources, sinks, and models
+│   ├── pipeline.py         <- Builds the Beam RunInference pipeline
+│   └── run.py              <- A run module to parse the command options and run the Beam pipeline
+├── tensor_rt.Dockerfile    <- A Dockerfile to create a customer container with TensorRT
+└── tests                   <- Tests to cover local developments
+    └── test_pipeline.py
+```
 
 ## User Guide
 
@@ -91,6 +115,11 @@ make run-direct
 ```
 
 ### Step 4: Run the Beam pipeline using DataflowRunner
+To run a Dataflow job using CPUs without a custom container, try this (took ~30m and cost ~1.4$):
+```bash
+make run-df-cpu
+```
+
 To speed up the Dataflow worker startup time, custom container can be built by,
 ```bash
 make docker

@@ -33,7 +33,7 @@ init-venv: ## Create virtual environment in venv folder
 
 init: init-venv ## Init virtual environment
 	@./venv/bin/python3 -m pip install -U pip
-	@$(shell sed "s|\$${BEAM_VERSION}|$(BEAM_VERSION)|g" requirements_prod.txt > requirements.txt)
+	@$(shell sed "s|\$${BEAM_VERSION}|$(BEAM_VERSION)|g" requirements.prod.txt > requirements.txt)
 	@./venv/bin/python3 -m pip install -r requirements.txt
 	@./venv/bin/python3 -m pip install -r requirements.dev.txt
 	@./venv/bin/python3 -m pre_commit install --install-hooks --overwrite
@@ -75,7 +75,7 @@ docker: ## Build a custom docker image and push it to Artifact Registry
 	docker push $(CUSTOM_CONTAINER_IMAGE)
 
 run-df: docker ## Run a Dataflow job using the custom container with GPUs
-	$(eval JOB_NAME := beam-ml-starter-$(shell date +%s)-$(shell echo $$$$))
+	$(eval JOB_NAME := beam-ml-starter-gpu-$(shell date +%s)-$(shell echo $$$$))
 	@time ./venv/bin/python3 -m src.run \
 	--runner DataflowRunner \
 	--job_name $(JOB_NAME) \
@@ -85,6 +85,7 @@ run-df: docker ## Run a Dataflow job using the custom container with GPUs
 	--disk_size_gb $(DISK_SIZE_GB) \
 	--staging_location $(STAGING_LOCATION) \
 	--temp_location $(TEMP_LOCATION) \
+	--setup_file ./setup.py \
 	--device GPU \
 	--dataflow_service_option $(SERVICE_OPTIONS) \
 	--sdk_container_image $(CUSTOM_CONTAINER_IMAGE) \
