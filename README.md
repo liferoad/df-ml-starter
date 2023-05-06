@@ -116,10 +116,11 @@ make run-direct
 ```
 
 ### Step 4: Run the Beam pipeline using DataflowRunner
-To run a Dataflow job using CPUs without a custom container, try this (took ~30m and cost ~1.4$):
+To run a Dataflow job using CPUs without a custom container, try this:
 ```bash
 make run-df-cpu
 ```
+When using resnet101, the job took ~30m and cost ~1.4$ with resnet101.
 
 Running Dataflow GPU jobs needs to build a custom container,
 ```bash
