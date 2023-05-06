@@ -74,7 +74,7 @@ docker: ## Build a custom docker image and push it to Artifact Registry
 	-t $(CUSTOM_CONTAINER_IMAGE) -f tensor_rt.Dockerfile .
 	docker push $(CUSTOM_CONTAINER_IMAGE)
 
-run-df: docker ## Run a Dataflow job using the custom container with GPUs
+run-df-gpu: ## Run a Dataflow job using the custom container with GPUs
 	$(eval JOB_NAME := beam-ml-starter-gpu-$(shell date +%s)-$(shell echo $$$$))
 	@time ./venv/bin/python3 -m src.run \
 	--runner DataflowRunner \
@@ -88,6 +88,7 @@ run-df: docker ## Run a Dataflow job using the custom container with GPUs
 	--setup_file ./setup.py \
 	--device GPU \
 	--dataflow_service_option $(SERVICE_OPTIONS) \
+	--experiments=disable_worker_container_image_prepull \
 	--sdk_container_image $(CUSTOM_CONTAINER_IMAGE) \
 	--sdk_location container \
 	--input $(INPUT_DATA) \

@@ -50,7 +50,7 @@ newgrp docker
 
 ## User Guide
 
-**This process is only tested on GCE with Debian.**
+**This process is only tested on GCE VMs with Debian.**
 
 ### Step 1: Clone this repo and edit .env
 
@@ -66,7 +66,7 @@ If you want to try other ML models under `gs://apache-beam-ml/models/`,
 gsutil ls gs://apache-beam-ml/models/
 ```
 
-It is highly recommended to run through this guide once using `resnet101` for image classification.
+It is highly recommended to run through this guide once using `mobilenet_v2` for image classification.
 
 All the useful actions can be triggered using `make`:
 ```console
@@ -82,7 +82,8 @@ $ make
      init                      Init virtual environment
      init-venv                 Create virtual environment in venv folder
      lint                      Run linter on source code
-     run-df                    Run a Dataflow job using the custom container with GPUs
+     run-df-cpu                Run a Dataflow job with CPUs
+     run-df-gpu                Run a Dataflow job using the custom container with GPUs
      run-direct                Run a local test with DirectRunner
      test                      Run tests
 ```
@@ -120,12 +121,17 @@ To run a Dataflow job using CPUs without a custom container, try this (took ~30m
 make run-df-cpu
 ```
 
-To speed up the Dataflow worker startup time, custom container can be built by,
+Running Dataflow GPU jobs needs to build a custom container,
 ```bash
 make docker
 ```
 The final docker image will be pushed to Artifact Registry. For this guide,
 we use `tensor_rt.Dockerfile` to demonstrate how to build the container to run the inference on GPUs with TensorRT.
+
+This runs a Dataflow job with GPUs,
+```bash
+make run-df-gpu
+```
 
 ## Pipeline Details
 
