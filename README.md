@@ -129,6 +129,17 @@ we use `tensor_rt.Dockerfile` to demonstrate how to build the container to run t
 
 ## Pipeline Details
 
+This project contains a simple RunInference Beam pipeline,
+```
+Read the GCS file that contains image GCS paths (beam.io.ReadFromText) ->
+Pre-process the input image, run a Pytorch image classification model, post-process the results -->
+Write all predictions back to the GCS output file
+```
+To customize the pipeline, modify `build_pipeline` in [pipeline.py](https://github.com/liferoad/df-ml-starter/blob/main/src/pipeline.py).
+[config.py](https://github.com/liferoad/df-ml-starter/blob/main/src/config.py) contains a set of `pydantic` models
+to specify the configurations for sources, sinks, and models and validate them.
+Users can easily add more Pytorch classification models. [Here](https://github.com/apache/beam/tree/master/sdks/python/apache_beam/examples/inference) contains more examples.
+
 ## FAQ
 
 ### Permission error when using any GCP command

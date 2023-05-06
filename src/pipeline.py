@@ -36,9 +36,12 @@ from .config import ModelConfig, ModelName, SinkConfig, SourceConfig
 
 
 def get_model_class(model_name: ModelName) -> nn.Module:
-    model_dict = {ModelName.RESNET101: models.resnet101}
+    model_dict = {ModelName.RESNET101: models.resnet101, ModelName.MOBILENET_V2: models.mobilenet_v2}
 
-    return model_dict.get(model_name)
+    model_class = model_dict.get(model_name)
+    if not model_class:
+        raise ValueError(f"cannot recognize the model {model_name}")
+    return model_class
 
 
 def read_image(image_file_name: str, path_to_dir: Optional[str] = None) -> Tuple[str, Image.Image]:

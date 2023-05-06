@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 
 class ModelName(str, Enum):
     RESNET101 = "resnet101"
+    MOBILENET_V2 = "mobilenet_v2"
 
 
 class ModelConfig(BaseModel):
