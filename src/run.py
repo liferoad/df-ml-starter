@@ -65,7 +65,7 @@ def run(argv=None, save_main_session=True, device="CPU", test_pipeline=None) -> 
         model_state_dict_path=known_args.model_state_dict_path,
         model_class_name=known_args.model_name,
         model_params={"num_classes": 1000},
-        device=device,
+        device=pipeline_args.device,
     )
 
     source_config = SourceConfig(input=known_args.input)
