@@ -47,38 +47,42 @@ def parse_known_args(argv):
         help="Path to the directory where images are stored."
         "Not required if image names in the input file have absolute path.",
     )
+    parser.add_argument(
+        "--device",
+        default="CPU",
+        help="Device to be used on the Runner. Choices are (CPU, GPU).",
+    )
     return parser.parse_known_args(argv)
 
 
-def run(argv=None, save_main_session=True, device="CPU", test_pipeline=None) -> PipelineResult:
+def run(argv=None, save_main_session=True, test_pipeline=None) -> PipelineResult:
     """
     Args:
       argv: Command line arguments defined for this example.
       save_main_session: Used for internal testing.
-      device: Device to be used on the Runner. Choices are (CPU, GPU).
       test_pipeline: Used for internal testing.
     """
     known_args, pipeline_args = parse_known_args(argv)
+
+    pipeline_options = PipelineOptions(pipeline_args)
+    pipeline_options.view_as(SetupOptions).save_main_session = save_main_session
+
+    pipeline = test_pipeline
+    if not test_pipeline:
+        pipeline = beam.Pipeline(options=pipeline_options)
 
     # setup configs
     model_config = ModelConfig(
         model_state_dict_path=known_args.model_state_dict_path,
         model_class_name=known_args.model_name,
         model_params={"num_classes": 1000},
-        device=pipeline_args.device,
+        device=known_args.device,
     )
 
     source_config = SourceConfig(input=known_args.input)
     sink_config = SinkConfig(output=known_args.output)
 
-    pipeline_options = PipelineOptions(pipeline_args)
-    pipeline_options.view_as(SetupOptions).save_main_session = save_main_session
-
     # build the pipeline using configs
-    pipeline = test_pipeline
-    if not test_pipeline:
-        pipeline = beam.Pipeline(options=pipeline_options)
-
     build_pipeline(pipeline, source_config=source_config, sink_config=sink_config, model_config=model_config)
 
     # run it

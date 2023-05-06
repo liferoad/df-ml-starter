@@ -120,7 +120,8 @@ To run a Dataflow job using CPUs without a custom container, try this:
 ```bash
 make run-df-cpu
 ```
-When using resnet101, the job took ~30m and cost ~1.4$ with resnet101.
+When using resnet101 to score 50k images, the job took ~30m and cost ~1.4$ with resnet101.
+For `mobilenet_v2`, it cost 0.5$ with ~22m.
 
 Running Dataflow GPU jobs needs to build a custom container,
 ```bash
