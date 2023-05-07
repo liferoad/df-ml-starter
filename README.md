@@ -137,6 +137,9 @@ This runs a Dataflow job with GPUs,
 ```bash
 make run-df-gpu
 ```
+When using resnet101 to score 50k images, the job took ~1h and cost ~0.5$ with resnet101.
+For `mobilenet_v2`, it cost 0.05$ with ~1h.
+Note the cost and time depends on your job settings and the regions.
 
 ## Pipeline Details
 
