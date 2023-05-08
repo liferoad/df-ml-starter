@@ -15,7 +15,7 @@ and launch the production job using DataflowRunner on either CPUs or GPUs. It ca
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y python3-venv git make
+sudo apt-get install -y python3-venv git make time
 ```
 Install Docker on Debian: https://docs.docker.com/engine/install/debian/
 Without sudo,
