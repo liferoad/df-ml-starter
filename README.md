@@ -15,7 +15,7 @@ and launch the production job using DataflowRunner on either CPUs or GPUs. It ca
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y python3-venv git make time
+sudo apt-get install -y python3-venv git make time wget
 ```
 Install Docker on Debian: https://docs.docker.com/engine/install/debian/
 Without sudo,
@@ -94,7 +94,7 @@ make init
 source venv/bin/activate
 ```
 Note you must make sure the base Python version matches the version defined in `.env`.
-The base python can be configured using `conda`, e.g.,
+The base python can be configured using [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html), e.g.,
 ```bash
 conda create --name py38 python=3.8
 conda activate py38
