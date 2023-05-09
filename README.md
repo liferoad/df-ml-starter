@@ -1,7 +1,7 @@
 # df-ml-starter
 
 ## Summary
-This repo contains a simple Beam RunInference project, which demonstrates how to run this Beam pipeline using DirectRunner to develope and test
+This repo contains a simple Beam RunInference project, which demonstrates how to run this Beam pipeline using DirectRunner to develop and test
 and launch the production job using DataflowRunner on either CPUs or GPUs. It can be served as a boilerplate to create a new Dataflow ML project.
 
 ## Prerequisites
@@ -206,3 +206,4 @@ exec /opt/apache/beam/boot: no such file or directory
 * https://cloud.google.com/dataflow/docs/guides/using-gpus#building_a_custom_container_image
 * https://beam.apache.org/documentation/sdks/python-pipeline-dependencies/
 * https://github.com/apache/beam/blob/master/.test-infra/jenkins/job_InferenceBenchmarkTests_Python.groovy
+* https://cloud.google.com/dataflow/docs/guides/develop-with-gpus
