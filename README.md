@@ -1,3 +1,7 @@
+**This project is moved to https://github.com/google/dataflow-ml-starter.**
+
+**DO NOT USE IT UNLESS YOU KNOW WHAT YOU ARE DOING**.
+
 # df-ml-starter
 
 ## Summary
